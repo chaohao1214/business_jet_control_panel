@@ -1,34 +1,46 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import "./App.css";
+import MainLayout from "./layouts/MainLayout";
+import { useThemeMode } from "./theme/ThemeModeContext";
+import { Box, Typography } from "@mui/material";
 
-function App() {
-  const [count, setCount] = useState(0);
-
+const PlaceholderPage = ({ title }) => {
+  const { mode } = useThemeMode();
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Business Jet Control Panel</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Box sx={{ color: "text.primary" }}>
+      <Typography variant="h4">{title}</Typography>
+      <Typography>
+        Content for {title} will go here. Current mode: {mode}
+      </Typography>
+    </Box>
+  );
+};
+
+const OverviewPage = () => <PlaceholderPage title="Overview" />;
+const LightingPage = () => <PlaceholderPage title="Lighting" />;
+const ClimatePage = () => <PlaceholderPage title="Climate" />;
+const EntertainmentPage = () => <PlaceholderPage title="Entertainment" />;
+const CommunicationPage = () => <PlaceholderPage title="Communication" />;
+function App() {
+  return (
+    <Router>
+      <MainLayout>
+        <Routes>
+          <Route path="/" element={<Navigate replace to="/communication" />} />
+          <Route path="/overview" element={<OverviewPage />} />
+          <Route path="/lighting" element={<LightingPage />} />
+          <Route path="/climate" element={<ClimatePage />} />
+          <Route path="/entertainment" element={<EntertainmentPage />} />
+          <Route path="/communication" element={<CommunicationPage />} />
+        </Routes>
+      </MainLayout>
+    </Router>
   );
 }
 
