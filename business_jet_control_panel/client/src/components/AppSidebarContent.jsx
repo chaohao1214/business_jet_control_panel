@@ -18,7 +18,8 @@ import {
   Typography,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { ThemeContext } from "@emotion/react";
+
+import { ThemeModeContext } from "../theme/ThemeModeContext";
 const navItems = [
   { text: "Overview", icon: <HomeIcon />, path: "/overview" },
   { text: "Lighting", icon: <LightbulbIcon />, path: "/lighting" },
@@ -27,37 +28,46 @@ const navItems = [
   { text: "Communication", icon: <PhoneIcon />, path: "/communication" },
 ];
 
-const AppSidebar = ({ width }) => {
+const AppSidebarContent = ({ drawerWidth, onDrawerToggle }) => {
   const navigate = useNavigate();
+  console.log("AppSidebarContent rendered. Props:", {
+    drawerWidth,
+    onDrawerToggle,
+  });
   const [selectedIndex, setSelectedIndex] = useState(4);
-  const { mode, toggleThemeMode } = useContext(ThemeContext); // change between dark/white mode
+  const { mode, toggleThemeMode } = useContext(ThemeModeContext); // change between dark/white mode
   const handleListItemClick = (index, path) => {
     setSelectedIndex(index);
     navigate(path);
+    if (onDrawerToggle) {
+      onDrawerToggle();
+    }
     console.log("Navigate to:", path);
   };
   return (
     <Box
-      sx={{
-        width: width,
-        flexShrink: 0,
-        bgcolor: "background.paper",
-        height: "100vh",
-        borderRight: (theme) => `1px solid ${theme.palette.divider}`,
-        display: "flex",
-        flexDirection: "column",
-        p: 2,
-      }}
+      sx={{ p: 2, display: "flex", flexDirection: "column", height: "100%" }}
     >
-      <Typography variant="h6" sx={{ mb: 2, px: 1, color: "text.primary" }}>
-        Cabin Control
-      </Typography>
-      <Tooltip title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}>
-        <IconButton onClick={toggleThemeMode} color="inherit">
-          {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
-        </IconButton>
-      </Tooltip>
-      <List>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 1,
+        }}
+      >
+        {" "}
+        <Typography variant="h6" sx={{ mb: 2, px: 1, color: "text.primary" }}>
+          Cabin Control
+        </Typography>{" "}
+        <Tooltip title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}>
+          <IconButton onClick={toggleThemeMode} color="inherit">
+            {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
+          </IconButton>
+        </Tooltip>
+      </Box>
+
+      <List component="nav">
         {navItems.map((item, index) => (
           <ListItemButton
             key={item.text}
@@ -90,4 +100,4 @@ const AppSidebar = ({ width }) => {
   );
 };
 
-export default AppSidebar;
+export default AppSidebarContent;
