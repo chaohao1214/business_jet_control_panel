@@ -9,9 +9,8 @@ import connectDB from "./config/db.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const envPath = path.resolve(__dirname, "../.env");
-const dotenvResult = dotenv.config({ path: envPath }); // Specify the path to your .env file
 
-dotenv.config();
+dotenv.config({ path: envPath });
 //connect to mongoDB
 connectDB();
 const app = express();
