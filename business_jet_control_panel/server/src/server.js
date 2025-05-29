@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import cors from "cors";
 import connectDB from "./config/db.js";
 
-import wifiStatusRoutes from "./routes/wifiStatusRoutes.js";
+import communicationRoutes from "./routes/communicationRoutes.js";
 
 // Determine the __dirname equivalent in ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 });
 
 // TODO: Add API routes later
-app.use("/api/wifi-status", wifiStatusRoutes);
+app.use("/api/communication", communicationRoutes);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
