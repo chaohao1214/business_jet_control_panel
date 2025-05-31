@@ -30,10 +30,6 @@ const navItems = [
 
 const AppSidebarContent = ({ drawerWidth, onDrawerToggle }) => {
   const navigate = useNavigate();
-  console.log("AppSidebarContent rendered. Props:", {
-    drawerWidth,
-    onDrawerToggle,
-  });
   const [selectedIndex, setSelectedIndex] = useState(4);
   const { mode, toggleThemeMode } = useContext(ThemeModeContext); // change between dark/white mode
   const handleListItemClick = (index, path) => {

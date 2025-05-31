@@ -9,6 +9,7 @@ import "./App.css";
 import MainLayout from "./layouts/MainLayout";
 import { useThemeMode } from "./theme/ThemeModeContext";
 import { Box, Typography } from "@mui/material";
+import CommunicationPage from "./features/communication/CommunicationPage";
 
 const PlaceholderPage = ({ title }) => {
   const { mode } = useThemeMode();
@@ -26,7 +27,7 @@ const OverviewPage = () => <PlaceholderPage title="Overview" />;
 const LightingPage = () => <PlaceholderPage title="Lighting" />;
 const ClimatePage = () => <PlaceholderPage title="Climate" />;
 const EntertainmentPage = () => <PlaceholderPage title="Entertainment" />;
-const CommunicationPage = () => <PlaceholderPage title="Communication" />;
+
 function App() {
   return (
     <Router>
