@@ -9,22 +9,19 @@ import {
 } from "@mui/material";
 import AppSidebarContent from "../components/AppSidebarContent";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useTheme } from "@mui/material/styles"; // Recommended change
-const MainLayout = ({ children }) => {
-  const DRAWER_WIDTH = 280;
+import { useTheme } from "@mui/material/styles";
 
+const DRAWER_WIDTH = 280;
+
+const MainLayout = ({ children }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [mobileOpen, setMobileOpen] = useState(false); // State for temporary drawer
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
-  const drawerContent = (
-    <AppSidebarContent
-      drawerWidth={DRAWER_WIDTH}
-      onDrawerToggle={isMobile ? handleDrawerToggle : undefined}
-    />
-  );
+
   return (
     <Box
       sx={{
@@ -49,14 +46,13 @@ const MainLayout = ({ children }) => {
             sx={{ mr: 2, display: { md: "none" } }}
           >
             <MenuIcon />
-          </IconButton>{" "}
+          </IconButton>
         </Toolbar>
       </AppBar>
-      {/* {Drawer} */}
+
       <Box
         component="nav"
         sx={{ width: { md: DRAWER_WIDTH }, flexShrink: { md: 0 } }}
-        aria-label="mailbox folders"
       >
         <Drawer
           variant="temporary"
@@ -72,23 +68,25 @@ const MainLayout = ({ children }) => {
             },
           }}
         >
-          {drawerContent}
+          <AppSidebarContent
+            drawerWidth={DRAWER_WIDTH}
+            onDrawerToggle={handleDrawerToggle}
+          />
         </Drawer>
-        {/* Permanent Drawer for large screens (desktop) - THIS WAS MISSING */}
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: "none", md: "block" }, // Hide on xs, sm; display on md and up
+            display: { xs: "none", md: "block" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: DRAWER_WIDTH,
               bgcolor: "background.paper",
-              borderRight: (theme) => `1px solid ${theme.palette.divider}`, // Optional: adds a border
+              borderRight: (theme) => `1px solid ${theme.palette.divider}`,
             },
           }}
-          open // Permanent drawer is always open by definition
+          open
         >
-          {drawerContent}
+          <AppSidebarContent drawerWidth={DRAWER_WIDTH} />
         </Drawer>
       </Box>
 
@@ -96,12 +94,12 @@ const MainLayout = ({ children }) => {
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { xs: "100%", md: `calc(100% - ${DRAWER_WIDTH}px)` },
-          mt: { xs: "56px", sm: "64px" },
+          width: "100%",
+          px: { xs: 2, sm: 4 },
+          pt: { xs: "56px", sm: "64px" },
+          boxSizing: "border-box",
         }}
       >
-        {/* {<Toolbar />} */}
         {children}
       </Box>
     </Box>

@@ -1,42 +1,33 @@
-// client/src/components/StatusItem.jsx
-import React from "react";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Typography from "@mui/material/Typography";
+import { Box, Typography, useMediaQuery } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
-const StatusItem = ({ label, value, subValue }) => {
+const StatusItem = ({ label, value }) => {
+  const theme = useTheme();
+  const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
-    <ListItem
+    <Box
       sx={{
         display: "flex",
+        flexDirection: isSmall ? "column" : "row",
         justifyContent: "space-between",
-        py: 1.5, // Padding top and bottom
-        alignItems: "center",
+        alignItems: isSmall ? "flex-start" : "center",
+        px: 2,
+        py: 1,
+        borderBottom: "1px solid",
+        borderColor: "divider",
       }}
     >
-      <ListItemText
-        primary={label}
-        secondary={subValue || null}
-        sx={
-          {
-            /* flexGrow: 1, // Allow label part to take more space if needed, but space-between should handle distribution */
-          }
-        }
-      />
-      <Typography
-        variant="body1"
-        sx={{
-          color: "text.primary",
-          // textAlign: 'right', // Not strictly needed if ListItem uses space-between and this is the last item
-          ml: 2, // Add some margin to ensure separation from the label part
-        }}
-      >
-        {/* Ensure value is a string or primitive for Typography to render */}
-        {value !== undefined && value !== null && value !== ""
-          ? String(value)
-          : "N/A"}
+      <Typography variant="body2" sx={{ color: "text.secondary" }}>
+        {label}
       </Typography>
-    </ListItem>
+      <Typography
+        variant="body2"
+        sx={{ color: "text.primary", fontWeight: 500, mt: isSmall ? 0.5 : 0 }}
+      >
+        {value || "N/A"}
+      </Typography>
+    </Box>
   );
 };
 

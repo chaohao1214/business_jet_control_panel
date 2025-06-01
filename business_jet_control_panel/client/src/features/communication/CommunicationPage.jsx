@@ -1,15 +1,13 @@
-import React, { useCallback } from "react";
+// CommunicationPage.jsx
+import React, { useEffect } from "react";
 import {
   Alert,
   Box,
   Button,
   CircularProgress,
-  List,
   Paper,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
-import { useEffect } from "react";
 import {
   getIntercomStatus,
   getSatellitePhoneStatus,
@@ -37,7 +35,7 @@ const CommunicationPage = () => {
     fetchData: fetchSatelliteData,
   } = useApiFetcher({
     apiCallFunction: getSatellitePhoneStatus,
-    entityName: "Satellite Phone ",
+    entityName: "Satellite Phone",
   });
 
   const {
@@ -49,6 +47,7 @@ const CommunicationPage = () => {
     apiCallFunction: getIntercomStatus,
     entityName: "Intercom Status",
   });
+
   useEffect(() => {
     fetchWifiData();
     fetchSatelliteData();
@@ -57,45 +56,52 @@ const CommunicationPage = () => {
 
   const handleCallIntercom = async () => {
     try {
-      const response = await initiateIntercomCall({ destination: "Pilot" });
-      console.log("Intercom call response:", response);
+      await initiateIntercomCall({ destination: "Pilot" });
       fetchIntercomData();
     } catch (error) {
       console.error("Failed to initiate intercom call", error);
     }
   };
-  const renderSection = ({ title, loading, error, data, renderItems }) => {
-    if (loading)
-      return (
-        <CircularProgress sx={{ display: "block", margin: "20px auto" }} />
-      );
-    if (error)
-      return (
-        <Alert severity="error" sx={{ mt: 2 }}>
-          {error}
-        </Alert>
-      );
-    if (!data)
-      return (
-        <Typography
-          sx={{ mt: 2, color: "text.secondary" }}
-        >{`No ${title} data available.`}</Typography>
-      );
+
+  const renderSection = ({
+    title,
+    loading,
+    error,
+    data,
+    renderItems,
+    showCallButton,
+  }) => {
     return (
-      <Paper elevation={2} sx={{ p: 2, mb: 3, bgcolor: "background.paper" }}>
-        <Typography
-          variant="h5"
-          gutterBottom
-          sx={{ color: "text.primary", fontWeight: "bold" }}
-        >
+      <Paper
+        elevation={2}
+        sx={{
+          width: "100%",
+          p: { xs: 2, sm: 3 },
+          bgcolor: "background.paper",
+        }}
+      >
+        <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
           {title}
         </Typography>
-        <List dense>{renderItems(data)}</List>
-        {title === "Intercom" && (
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-            <Button variant="contained" onClick={handleCallIntercom}>
-              Call
-            </Button>
+
+        {loading ? (
+          <CircularProgress />
+        ) : error ? (
+          <Alert severity="error">{error}</Alert>
+        ) : !data ? (
+          <Typography color="text.secondary">
+            No {title} data available.
+          </Typography>
+        ) : (
+          <Box>
+            {renderItems(data)}
+            {showCallButton && (
+              <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+                <Button variant="contained" onClick={handleCallIntercom}>
+                  Call
+                </Button>
+              </Box>
+            )}
           </Box>
         )}
       </Paper>
@@ -103,14 +109,22 @@ const CommunicationPage = () => {
   };
 
   return (
-    <Box>
-      <Typography
-        variant="h4"
-        gutterBottom
-        sx={{ color: "text.primary", fontWeight: "bold" }}
-      >
+    <Box
+      sx={{
+        maxWidth: "1200px",
+        width: "100%",
+        mx: "auto",
+        display: "flex",
+        flexDirection: "column",
+        gap: 3,
+        px: { xs: 2, sm: 4 },
+        py: 3,
+      }}
+    >
+      <Typography variant="h4" sx={{ fontWeight: "bold" }}>
         Communication
       </Typography>
+
       {renderSection({
         title: "Wi-Fi",
         loading: loadingWifi,
@@ -149,6 +163,7 @@ const CommunicationPage = () => {
         loading: loadingIntercom,
         error: errorIntercom,
         data: intercomStatus,
+        showCallButton: true,
         renderItems: (data) => (
           <>
             <StatusItem label="Status" value={data.status} />
