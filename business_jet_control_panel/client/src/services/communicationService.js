@@ -40,6 +40,11 @@ export const getIntercomStatus = async () => {
   }
 };
 
+/**
+ * Initiates an Intercom call.
+ * @param {Object} callDetails - Details for the call, e.g., { destination: "Pilot" }
+ * @returns {Promise<Object>} A promise that resolves to the API response.
+ */
 export const initiateIntercomCall = async (callDetails) => {
   try {
     const response = await axios.post(

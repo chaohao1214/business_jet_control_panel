@@ -83,28 +83,46 @@ export const getCurrentIntercomStatus = async (req, res) => {
 
 export const handleIntercomCall = async (req, res) => {
   const { destination } = req.body;
+  const callTime = new Date();
   try {
-    let intercom = await IntercomStatus.findOne({});
-    if (!intercom) {
-      console.log(
-        "[Controller] No existing IntercomStatus found, creating a new one for the call."
-      );
-    } else {
-      // update existing call
-      intercom.status = "Calling";
-    }
-    intercom = new IntercomStatus({
+    const query = {};
+    const update = {
       status: "Calling",
       currentDestination: destination || "Cabin Crew",
       lastCallTo: destination || "Cabin Crew",
-      lastCallTime: new Date(),
-    });
+      lastCallTime: callTime,
+    };
+    const options = {
+      upsert: true,
+      new: true,
+      runValidators: true,
+    };
+    const updatedIntercomStatus = await IntercomStatus.findOneAndUpdate(
+      query,
+      update,
+      options
+    );
+    if (!updatedIntercomStatus) {
+      console.error(
+        "[Controller] findOneAndUpdate returned null even with upsert."
+      );
+      return res
+        .status(404)
+        .json({ message: "Could not update or create Intercom status." });
+    }
 
-    const updateIntercomStatus = await intercom.save();
-    // if we have mqtt msg, we may also need to update the status change, public a topic here
     res.status(200).json({
       message: "Intercom call initiated.",
-      data: updateIntercomStatus,
+      data: updatedIntercomStatus,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error(
+      "[Controller] Error handling Intercom call:",
+      error.message,
+      error.stack
+    );
+    res
+      .status(500)
+      .json({ message: "Server error while handling Intercom call" });
+  }
 };

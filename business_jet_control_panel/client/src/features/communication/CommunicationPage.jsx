@@ -16,8 +16,10 @@ import {
 } from "../../services/communicationService";
 import StatusItem from "../../components/StatusItem";
 import useApiFetcher from "../../hooks/useApiFetcher";
+import { useSnackbar } from "notistack";
 
 const CommunicationPage = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const {
     data: wifiStatus,
     loading: loadingWifi,
@@ -56,10 +58,18 @@ const CommunicationPage = () => {
 
   const handleCallIntercom = async () => {
     try {
-      await initiateIntercomCall({ destination: "Pilot" });
-      fetchIntercomData();
+      const response = await initiateIntercomCall({ destination: "office" });
+      if (response && response.message === "Intercom call initiated.") {
+        enqueueSnackbar("Intercom call initiated succesfull!", {
+          variant: "success",
+        });
+        fetchIntercomData();
+      }
     } catch (error) {
       console.error("Failed to initiate intercom call", error);
+      enqueueSnackbar(error, {
+        variant: "error",
+      });
     }
   };
 

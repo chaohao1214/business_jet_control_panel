@@ -14,8 +14,6 @@ import { useTheme } from "@mui/material/styles";
 const DRAWER_WIDTH = 280;
 
 const MainLayout = ({ children }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -28,6 +26,7 @@ const MainLayout = ({ children }) => {
         display: "flex",
         minHeight: "100vh",
         bgcolor: "background.default",
+        flexDirection: "row",
       }}
     >
       <AppBar
@@ -92,12 +91,11 @@ const MainLayout = ({ children }) => {
 
       <Box
         component="main"
+        width="80vw"
         sx={{
-          flexGrow: 1,
-          width: "100%",
-          px: { xs: 2, sm: 4 },
-          pt: { xs: "56px", sm: "64px" },
-          boxSizing: "border-box",
+          px: { xs: 2, sm: 3, md: 4 },
+          pt: { xs: 8, sm: 9, md: 10 },
+          overflowX: "hidden",
         }}
       >
         {children}
