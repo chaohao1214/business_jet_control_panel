@@ -1,6 +1,7 @@
 import WifiStatus from "../models/WifiStatus.js";
 import SatellitePhoneStatus from "../models/SatellitePhoneStatus.js";
 import IntercomStatus from "../models/IntercomStatus.js";
+import { emitIntercomStatusUpdate } from "../../services/socketManager.js";
 /**
  * @description get the current wifi status
  * @route GET /api/communication/wifi
@@ -111,6 +112,7 @@ export const handleIntercomCall = async (req, res) => {
         .json({ message: "Could not update or create Intercom status." });
     }
 
+    emitIntercomStatusUpdate(updatedIntercomStatus);
     res.status(200).json({
       message: "Intercom call initiated.",
       data: updatedIntercomStatus,
